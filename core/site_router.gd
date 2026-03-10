@@ -67,3 +67,8 @@ func resolve(url: String) -> String:
 		push_warning("SiteRouter: no page cached for '%s'" % page_name)
 		return ""
 	return _page_cache[page_name]
+
+
+## Returns all cached page keys — useful for debugging.
+func page_keys() -> Array:
+	return _page_cache.keys()

@@ -94,12 +94,13 @@ func open() -> void:
 
 				xmlFiles.forEach(function(xf) {
 					var r   = new FileReader();
-					var key = xf.name.replace(/\\.xml$/, '');
+					var key = xf.name.replace(/\.xml$/, '');
 					r.onload = function(ev) {
 						result.pages[key] = ev.target.result;
 						if (xf === primary) result.xml = ev.target.result;
 						finish();
 					};
+					r.onerror = function() { finish(); };
 					r.readAsText(xf);
 				});
 
@@ -109,6 +110,7 @@ func open() -> void:
 						result.assets[af.name] = ev.target.result;
 						finish();
 					};
+					r.onerror = function() { finish(); };
 					r.readAsDataURL(af);
 				});
 			};
@@ -134,4 +136,6 @@ func _dispatch(payload: String) -> void:
 		failed.emit("XML file was empty.")
 		return
 
-	completed.emit(xml_text, data.get("pages", {}), data.get("assets", {}))
+	var pages: Dictionary = data.get("pages", {})
+	print("WebDirPicker pages received: ", pages.keys())
+	completed.emit(xml_text, pages, data.get("assets", {}))

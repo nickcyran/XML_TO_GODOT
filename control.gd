@@ -132,6 +132,7 @@ func _on_web_dir_picked(xml_text: String, pages: Dictionary, assets: Dictionary)
 
 	var assets_abs: String = ProjectSettings.globalize_path(tmp_assets)
 	_router = SiteRouter.load_from_dict(pages, assets_abs)
+	_dbg("router loaded, pages: %s" % str(_router.page_keys()))
 	_process_xml(xml_text, assets_abs)
 
 
