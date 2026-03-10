@@ -184,7 +184,7 @@ func _build_img(node: PageNode) -> Control:
 
 func _build_text(node: PageNode) -> Control:
 	var lbl := Label.new()
-	lbl.text = _vars.resolve(node.text)
+	lbl.text = _vars.resolve(_normalize_whitespace(node.text))
 	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl.add_theme_color_override("font_color", COLOR_BODY)
@@ -216,4 +216,12 @@ func _inner_text(node: PageNode) -> String:
 	var out := ""
 	for child in node.children:
 		out += _inner_text(child)
-	return _vars.resolve(out.strip_edges())
+	return _vars.resolve(_normalize_whitespace(out))
+
+
+## Collapse runs of whitespace (spaces, tabs, newlines) into a single space,
+## matching standard HTML text-rendering behaviour.
+static func _normalize_whitespace(text: String) -> String:
+	var re := RegEx.new()
+	re.compile("\\s+")
+	return re.sub(text, " ", true).strip_edges()

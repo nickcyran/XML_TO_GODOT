@@ -17,7 +17,7 @@
       <p color="#6b7280">@date</p>
     </hbox>
 
-    <hr/>
+    <hr />
 
     <p>For decades the browser has been the unchallenged king of document
       rendering. HTML, CSS, and JavaScript form a triad so deeply entrenched
@@ -57,7 +57,7 @@
       no HTTP request, no framework. Just GDScript reading a second XML file from
       the same folder.</p>
 
-    <hr/>
+    <hr />
 
     <a href="site://author">Read about the author →</a>
 
@@ -65,7 +65,7 @@
 
   <!-- FOOTER -->
   <vbox padding="16,32" gap="4" bg="#f1f5f9">
-    <hr/>
+    <hr />
     <p align="center" color="#6b7280">The Renderer Times · @year</p>
   </vbox>
 
