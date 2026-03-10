@@ -94,7 +94,7 @@ func open() -> void:
 
 				xmlFiles.forEach(function(xf) {
 					var r   = new FileReader();
-					var key = xf.name.replace(/\.xml$/, '');
+					var key = xf.name.endsWith('.xml') ? xf.name.slice(0, -4) : xf.name;
 					r.onload = function(ev) {
 						result.pages[key] = ev.target.result;
 						if (xf === primary) result.xml = ev.target.result;

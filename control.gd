@@ -1,6 +1,7 @@
 extends Control
 
 const SiteRouter := preload("res://core/site_router.gd")
+const WebDirPicker := preload("res://core/web_dir_picker.gd")
 
 # ── Node references (resolved in _ready) ──────────────────────────────────────
 @onready var _upload_screen: Control = $UploadScreen
