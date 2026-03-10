@@ -48,8 +48,8 @@ static func load_from_dir(site_dir: String, p_assets_base: String) -> SiteRouter
 ## Create a router from an in-memory [param pages] dictionary ([code]name → xml_text[/code]).
 static func load_from_dict(pages: Dictionary, p_assets_base: String) -> SiteRouter:
 	var router := SiteRouter.new()
-	router.assets_base   = p_assets_base
-	router._page_cache   = pages.duplicate()
+	router.assets_base = p_assets_base
+	router._page_cache = pages.duplicate()
 	return router
 
 

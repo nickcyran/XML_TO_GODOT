@@ -20,12 +20,31 @@ var _router: SiteRouter = null
 var _web_picker: WebDirPicker = null
 var _renderer: XmlPageRenderer = null
 
+# ── Debug overlay (always on top) ─────────────────────────────────────────────
+var _debug_label: Label = null
+
+func _dbg(msg: String) -> void:
+	print(msg)
+	if _debug_label:
+		_debug_label.text = msg
+
 # ── Lifecycle ──────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
 	_upload_btn.pressed.connect(_on_upload_pressed)
 	_back_btn.pressed.connect(_on_back_pressed)
 	_folder_dialog.dir_selected.connect(_on_folder_selected)
+
+	# Debug overlay — sits above everything, always visible.
+	_debug_label = Label.new()
+	_debug_label.text = "DEBUG: ready"
+	_debug_label.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_debug_label.position = Vector2(8, -32)
+	_debug_label.z_index = 100
+	_debug_label.modulate = Color(1, 0.2, 0.2)
+	_debug_label.add_theme_font_size_override("font_size", 14)
+	add_child(_debug_label)
+
 	_show_upload()
 	if OS.has_feature("web"):
 		_web_picker = WebDirPicker.new()
@@ -95,6 +114,7 @@ func _first_xml_in_dir(dir: String) -> String:
 # ── Web — folder picker ────────────────────────────────────────────────────────
 
 func _on_web_dir_picked(xml_text: String, pages: Dictionary, assets: Dictionary) -> void:
+	_dbg("picked: %d pages, %d assets" % [pages.size(), assets.size()])
 	# Write asset data-URLs into a temp folder so Image.load() can reach them.
 	var tmp_assets := "user://site_assets_tmp"
 	DirAccess.make_dir_recursive_absolute(tmp_assets)
@@ -118,21 +138,27 @@ func _on_web_dir_picked(xml_text: String, pages: Dictionary, assets: Dictionary)
 # ── Pipeline ───────────────────────────────────────────────────────────────────
 
 func _process_xml(xml_text: String, assets_dir: String = "") -> void:
+	_dbg("process_xml: parsing (%d chars)" % xml_text.length())
 	var parser := XmlPageParser.new()
 	var root := parser.parse_string(xml_text)
 
 	if root == null:
+		_dbg("ERROR: parse failed")
 		_status_label.text = "Parse failed — check XML syntax."
 		return
 
-	if _renderer == null:
-		_renderer = XmlPageRenderer.new()
-		_renderer.link_clicked.connect(_on_link_clicked)
+	_dbg("parsed ok, building...")
+	# Fresh renderer each navigation so NodeBuilder has no leftover signal connections.
+	# Stored on self so RefCounted isn't freed before the built nodes can use it.
+	_renderer = XmlPageRenderer.new()
+	_renderer.link_clicked.connect(_on_link_clicked)
 
 	var built := _renderer.build(root, assets_dir)
 	if built == null:
+		_dbg("ERROR: render failed")
 		_status_label.text = "Render failed."
 		return
+	_dbg("built ok, swapping node...")
 
 	if _built_node != null:
 		_render_container.remove_child(_built_node)
@@ -142,7 +168,7 @@ func _process_xml(xml_text: String, assets_dir: String = "") -> void:
 	_built_node = built
 	_render_container.add_child(built)
 	built.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-
+	_dbg("done — page displayed")
 	_show_render()
 
 
@@ -151,13 +177,17 @@ func _process_xml(xml_text: String, assets_dir: String = "") -> void:
 func _on_back_pressed() -> void:
 	_renderer = null
 	_router = null
+	if _built_node != null:
+		_render_container.remove_child(_built_node)
+		_built_node.queue_free()
+		_built_node = null
 	_show_upload()
 
 
 # ── Link handler ───────────────────────────────────────────────────────────────
 
 func _on_link_clicked(url: String) -> void:
-	print("LINK CLICKED:", url)
+	_dbg("link clicked: %s" % url)
 	if url.begins_with("site://"):
 		_navigate(url)
 	elif url.begins_with("http://") or url.begins_with("https://"):
@@ -166,12 +196,13 @@ func _on_link_clicked(url: String) -> void:
 
 func _navigate(url: String) -> void:
 	if _router == null:
-		push_warning("No router loaded.")
+		_dbg("ERROR: no router")
 		return
 
 	var xml_text := _router.resolve(url)
 	if xml_text.is_empty():
-		push_warning("Router: page not found for '%s'" % url)
+		_dbg("ERROR: page not found: %s" % url)
 		return
 
+	_dbg("navigating to: %s" % url)
 	_process_xml(xml_text, _router.assets_base)
