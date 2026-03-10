@@ -19,7 +19,7 @@ class_name SiteRouter extends RefCounted
 ## Absolute path to the assets sub-folder.
 var assets_base: String = ""
 
-var _page_cache: Dictionary[String, String] = {}
+var _page_cache: Dictionary = {}
 
 
 # ── Factories ──────────────────────────────────────────────────────────────────
@@ -49,7 +49,8 @@ static func load_from_dir(site_dir: String, p_assets_base: String) -> SiteRouter
 static func load_from_dict(pages: Dictionary, p_assets_base: String) -> SiteRouter:
 	var router := SiteRouter.new()
 	router.assets_base = p_assets_base
-	router._page_cache = pages.duplicate()
+	for key: Variant in pages:
+		router._page_cache[str(key)] = str(pages[key])
 	return router
 
 
