@@ -18,6 +18,7 @@ const SiteRouter := preload("res://core/site_router.gd")
 var _built_node: Control = null
 var _router: SiteRouter = null
 var _web_picker: WebDirPicker = null
+var _renderer: XmlPageRenderer = null
 
 # ── Lifecycle ──────────────────────────────────────────────────────────────────
 
@@ -124,8 +125,10 @@ func _process_xml(xml_text: String, assets_dir: String = "") -> void:
 		_status_label.text = "Parse failed — check XML syntax."
 		return
 
-	var renderer := XmlPageRenderer.new()
-	renderer.link_clicked.connect(_on_link_clicked)
+	if _renderer == null:
+		_renderer = XmlPageRenderer.new()
+		_renderer.link_clicked.connect(_on_link_clicked)
+	var renderer := _renderer
 
 	var built := renderer.build(root, assets_dir)
 	if built == null:
@@ -146,6 +149,8 @@ func _process_xml(xml_text: String, assets_dir: String = "") -> void:
 # ── Navigation ─────────────────────────────────────────────────────────────────
 
 func _on_back_pressed() -> void:
+	_renderer = null
+	_router = null
 	_show_upload()
 
 
