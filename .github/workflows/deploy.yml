@@ -15,11 +15,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Export with Godot
-        uses: nicholasnbg/godot-export-action@v1
+        uses: firebelley/godot-export@v6
         with:
-          godot_version: "4.4"
+          godot_executable_download_url: "https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_linux.x86_64.zip"
+          godot_export_templates_download_url: "https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_export_templates.tpz"
           export_name: "Web"
           export_path: "./build/web"
+          relative_export_path: true
 
       # GitHub Pages doesn't allow custom response headers, so we inject a
       # service worker (coi-serviceworker) that sets the Cross-Origin-Isolation
