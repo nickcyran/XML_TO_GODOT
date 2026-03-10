@@ -128,14 +128,14 @@ func _process_xml(xml_text: String, assets_dir: String = "") -> void:
 	if _renderer == null:
 		_renderer = XmlPageRenderer.new()
 		_renderer.link_clicked.connect(_on_link_clicked)
-	var renderer := _renderer
 
-	var built := renderer.build(root, assets_dir)
+	var built := _renderer.build(root, assets_dir)
 	if built == null:
 		_status_label.text = "Render failed."
 		return
 
 	if _built_node != null:
+		_render_container.remove_child(_built_node)
 		_built_node.queue_free()
 		_built_node = null
 
