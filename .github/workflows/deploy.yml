@@ -1,0 +1,44 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Export with Godot
+        uses: nicholasnbg/godot-export-action@v1
+        with:
+          godot_version: "4.4"
+          export_name: "Web"
+          export_path: "./build/web"
+
+      # GitHub Pages doesn't allow custom response headers, so we inject a
+      # service worker (coi-serviceworker) that sets the Cross-Origin-Isolation
+      # headers Godot's web export requires for SharedArrayBuffer.
+      - name: Inject coi-serviceworker
+        run: |
+          curl -sL https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.js \
+            -o ./build/web/coi-serviceworker.js
+          sed -i 's|<head>|<head>\n\t<script src="coi-serviceworker.js"></script>|' ./build/web/index.html
+
+      # 404.html redirect keeps deep-links working on gh-pages.
+      - name: Add 404 redirect
+        run: |
+          echo '<html><head><meta http-equiv="refresh" content="0;url=index.html"></head></html>' \
+            > ./build/web/404.html
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          force_orphan: true
