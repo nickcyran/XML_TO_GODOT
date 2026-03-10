@@ -133,5 +133,6 @@ func _wrap_bg(ctrl: Control, bg_str: String) -> PanelContainer:
 	panel.add_theme_stylebox_override("panel", style)
 	panel.size_flags_horizontal = ctrl.size_flags_horizontal
 	panel.size_flags_vertical = ctrl.size_flags_vertical
+	panel.mouse_filter = Control.MOUSE_FILTER_PASS  # don't swallow clicks meant for children
 	panel.add_child(ctrl)
 	return panel

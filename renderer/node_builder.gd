@@ -137,30 +137,32 @@ func _build_a(node: PageNode) -> Control:
 	var href: String = node.attrs.get("href", "")
 	var link_text: String = _inner_text(node)
 
-	var label := RichTextLabel.new()
-	label.bbcode_enabled = true
-	label.fit_content = true
-	label.scroll_active = false
-	label.autowrap_mode = TextServer.AUTOWRAP_OFF
-	label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	label.add_theme_color_override("default_color", LINK_COLOR_NORMAL)
-	label.text = "[url=%s][u]%s[/u][/url]" % [href, link_text]
+	# Use a flat Button instead of RichTextLabel — meta_clicked is unreliable
+	# inside ScrollContainers on the web export. Button.pressed always fires.
+	var btn := Button.new()
+	btn.text = link_text
+	btn.flat = true
+	btn.focus_mode = Control.FOCUS_NONE
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
-	var _on_hover_start := func(_meta: Variant) -> void:
-		label.add_theme_color_override("default_color", LINK_COLOR_HOVER)
-		label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	var _on_hover_end := func(_meta: Variant) -> void:
-		label.add_theme_color_override("default_color", LINK_COLOR_NORMAL)
-		label.mouse_default_cursor_shape = Control.CURSOR_ARROW
+	# Style: underlined link colour, no background.
+	var normal_font := btn.get_theme_font("font")
+	btn.add_theme_color_override("font_color", LINK_COLOR_NORMAL)
+	btn.add_theme_color_override("font_hover_color", LINK_COLOR_HOVER)
+	btn.add_theme_color_override("font_pressed_color", LINK_COLOR_HOVER)
+	btn.add_theme_color_override("font_focus_color", LINK_COLOR_NORMAL)
 
-	label.meta_hover_started.connect(_on_hover_start)
-	label.meta_hover_ended.connect(_on_hover_end)
+	# Transparent stylebox for all states so no button chrome shows.
+	var empty := StyleBoxEmpty.new()
+	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
+		btn.add_theme_stylebox_override(state, empty)
 
 	if href != "":
-		label.meta_clicked.connect(func(_meta: Variant) -> void:
+		btn.pressed.connect(func() -> void:
 			link_clicked.emit(href))
 
-	return label
+	return btn
 
 
 func _build_img(node: PageNode) -> Control:
