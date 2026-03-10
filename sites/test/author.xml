@@ -1,0 +1,53 @@
+<page>
+
+    <!-- HEADER -->
+    <hbox gap="16" padding="16,32" bg="#1e293b">
+        <h3 grow="true" color="#f1f5f9">The Renderer Times</h3>
+        <a href="site://feed">← Back to Article</a>
+    </hbox>
+
+    <!-- AUTHOR BIO -->
+    <vbox gap="20" padding="32,64">
+
+        <h1>About the Author</h1>
+
+        <hr/>
+
+        <h2>J. Nodeman</h2>
+
+        <p>J. Nodeman is a software engineer and technical writer with an unhealthy
+obsession with declarative UI systems. After spending several years fighting
+CSS specificity wars and webpack configuration files, he decided there had
+to be a better way.</p>
+
+        <p>He found it, improbably, inside a game engine.</p>
+
+        <p>Nodeman is the primary author of the xml_to_godot rendering pipeline and
+writes about it whenever he can convince himself that anyone else cares.
+He lives somewhere with good coffee and a reliable internet connection,
+which is all any of us really need.</p>
+
+        <h2>Writing</h2>
+
+        <p>All articles are written in plain XML and rendered at runtime — including
+this one. The author considers this either a proof of concept or a cry for
+help, depending on the day.</p>
+
+        <h2>Contact</h2>
+
+        <p>Reach the author through the project repository. Pull requests are
+welcome. Unsolicited CSS framework recommendations are not.</p>
+
+        <hr/>
+
+        <a href="site://feed">← Read the article</a>
+
+    </vbox>
+
+    <!-- FOOTER -->
+    <vbox padding="16,32" gap="4" bg="#f1f5f9">
+        <hr/>
+        <p align="center" color="#6b7280">The Renderer Times · @year</p>
+    </vbox>
+
+</page>

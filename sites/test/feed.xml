@@ -1,0 +1,72 @@
+<page>
+
+  <!-- HEADER -->
+  <hbox gap="16" padding="16,32" bg="#1e293b">
+    <h3 grow="true" color="#f1f5f9">The Renderer Times</h3>
+    <a href="site://author">About the Author</a>
+  </hbox>
+
+  <!-- ARTICLE -->
+  <vbox gap="20" padding="32,64">
+
+    <h1>Rendering the Web Without a Browser</h1>
+
+    <hbox gap="8">
+      <p color="#6b7280">By J. Nodeman</p>
+      <p color="#6b7280">·</p>
+      <p color="#6b7280">@date</p>
+    </hbox>
+
+    <hr/>
+
+    <p>For decades the browser has been the unchallenged king of document
+      rendering. HTML, CSS, and JavaScript form a triad so deeply entrenched
+      that suggesting an alternative feels almost heretical. Yet here we are,
+      parsing XML in a game engine and watching paragraphs, headings, and
+      hyperlinks spring to life as Godot Control nodes.</p>
+
+    <h2>Why XML?</h2>
+
+    <p>XML is verbose by design — every tag opens and closes, every attribute
+      is quoted. That verbosity is also its strength. A hand-written XML page
+      is immediately readable, diff-friendly, and trivially parsed by Godot's
+      built-in XMLParser without a single dependency.</p>
+
+    <p>Compare that to a full HTML parser: the spec runs to hundreds of pages,
+      error recovery rules alone could fill a dissertation, and you still haven't
+      touched CSS. Our XML dialect sidesteps all of that by defining only the
+      tags we actually need.</p>
+
+    <h2>The Pipeline</h2>
+
+    <p>Three stages sit between raw text and rendered pixels:</p>
+
+    <vbox gap="6" padding="4,20" bg="#f1f5f9">
+      <p>1. XmlPageParser turns the byte stream into a PageNode tree.</p>
+      <p>2. NodeBuilder walks that tree and emits Godot Controls.</p>
+      <p>3. AttrApplicator stamps layout properties onto each node.</p>
+    </vbox>
+
+    <p>The result is a live Godot scene indistinguishable from one hand-authored
+      in the editor — except it was built in milliseconds from a plain text file.</p>
+
+    <h2>What Comes Next</h2>
+
+    <p>Routing was the first logical step beyond a single page. Click
+      "About the Author" in the header and the scene swaps instantly — no browser,
+      no HTTP request, no framework. Just GDScript reading a second XML file from
+      the same folder.</p>
+
+    <hr/>
+
+    <a href="site://author">Read about the author →</a>
+
+  </vbox>
+
+  <!-- FOOTER -->
+  <vbox padding="16,32" gap="4" bg="#f1f5f9">
+    <hr/>
+    <p align="center" color="#6b7280">The Renderer Times · @year</p>
+  </vbox>
+
+</page>

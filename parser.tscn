@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://clup4myg87l7q"]
+
+[ext_resource type="Script" uid="uid://d254eq3o7juyg" path="res://control.gd" id="2_17be7"]
+
+[node name="Parser" type="Control" unique_id=86346178]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="." unique_id=1583609028]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_17be7")
+
+[node name="UploadScreen" type="Control" parent="Control" unique_id=694321133]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterBox" type="CenterContainer" parent="Control/UploadScreen" unique_id=151914048]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" type="VBoxContainer" parent="Control/UploadScreen/CenterBox" unique_id=1382272405]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Control/UploadScreen/CenterBox/Card" unique_id=285875108]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "XML → Godot Renderer"
+horizontal_alignment = 1
+
+[node name="SubLabel" type="Label" parent="Control/UploadScreen/CenterBox/Card" unique_id=1320291331]
+layout_mode = 2
+text = "Select a site folder containing a .xml file and an assets/ subfolder."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="UploadBtn" type="Button" parent="Control/UploadScreen/CenterBox/Card" unique_id=1045954427]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 16
+text = "Upload Site Folder…"
+
+[node name="StatusLabel" type="Label" parent="Control/UploadScreen/CenterBox/Card" unique_id=1654060008]
+modulate = Color(0.9, 0.3, 0.3, 1)
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="RenderView" type="Control" parent="Control" unique_id=94838644]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RenderContainer" type="Control" parent="Control/RenderView" unique_id=908769421]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackBtn" type="Button" parent="Control/RenderView" unique_id=1489750342]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "← Back"
+
+[node name="FolderDialog" type="FileDialog" parent="Control" unique_id=1015740467]
+title = "Open a Directory"
+file_mode = 2
+access = 2
